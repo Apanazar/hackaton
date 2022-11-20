@@ -3,7 +3,7 @@ import json
 import subprocess
 
 
-bot = telebot.TeleBot('5700965158:AAF254qjyjXlAmuJGbe51ce8jKz_JM1VD_s')
+bot = telebot.TeleBot('')
 
 global history
 history = 0
