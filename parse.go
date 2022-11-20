@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"log"
 	"math/rand"
@@ -34,7 +35,7 @@ type Article struct {
 }
 
 func write_file(text string) {
-	file, err := os.OpenFile("db.json", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0777)
+	file, err := os.OpenFile("db.json", os.O_APPEND|os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0777)
 
 	if err != nil {
 		fmt.Println(ColorRed, err, ColorReset)
@@ -85,7 +86,6 @@ func get_article(url string) []Article {
 		text := new_doc.Find(".entry-content p").Text()
 		mood := "Neutral"
 
-		rand.Seed(time.Now().UnixNano())
 		detektions := []string{"Reliable", "Unreliable"}
 		fake_detektion := detektions[rand.Intn(2)]
 
@@ -113,5 +113,15 @@ func get_article(url string) []Article {
 }
 
 func main() {
-	get_article("https://krakowexpats.pl/tips-articles/page/1/")
+	target := flag.String("url", "[empty]", "specify the site address")
+
+	flag.Usage = func() {
+		w := flag.CommandLine.Output()
+		fmt.Fprintln(w, "Usage of crawler:")
+		flag.PrintDefaults()
+	}
+	flag.Parse()
+
+	rand.Seed(time.Now().UnixNano())
+	get_article(*target)
 }
